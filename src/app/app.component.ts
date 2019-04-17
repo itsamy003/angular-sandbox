@@ -1,4 +1,11 @@
 import { Component } from '@angular/core';
+import { Directive, TemplateRef } from '@angular/core';
+
+//classes
+export abstract class FarmComponent {
+  public sheepTemplate: TemplateRef<void>;
+}
+
 
 @Component({
   selector: 'my-app',
@@ -14,7 +21,8 @@ export class AppComponent  {
   template: `<div class="fence">
       <ng-content></ng-content>
    </div>`,
-  styles: [`.fence{width:200px; height: 200px; border: 1px solid red;}`]
+  styles: [`.fence{width:200px; height: 200px; border: 1px solid red;}`],
+  providers: [{ provide: FarmComponent, useExisting: FenceComponent}]
 })
 export class FenceComponent  {
  
@@ -27,4 +35,18 @@ let instance = 0;
 })
 export class SheepComponent  {
  public count = ++instance;
+}
+
+
+
+
+
+
+@Directive({
+  selector: '[mySheepBlueprint]'
+})
+export class SheepBlueprintDirective  {
+  constructor(templateRef: TemplateRef<void>, farm: FenceComponent) {
+    farm.sheepTemplate = templateRef;
+  }
 }
