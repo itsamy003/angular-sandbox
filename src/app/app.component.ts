@@ -6,6 +6,15 @@ export abstract class FarmComponent {
   public sheepTemplate: TemplateRef<void>;
 }
 
+@Directive({
+  selector: '[mySheepBlueprint]'
+})
+export class SheepBlueprintDirective  {
+  constructor(templateRef: TemplateRef<void>, farm: FarmComponent) {
+    farm.sheepTemplate = templateRef;
+    debugger;
+  }
+}
 
 @Component({
   selector: 'my-app',
@@ -19,12 +28,14 @@ export class AppComponent  {
 @Component({
   selector: 'fence-comp',
   template: `<div class="fence">
-      <ng-content></ng-content>
+      <ng-container [ngTemplateOutlet]="sheepTemplate"></ng-container>
+      <ng-container [ngTemplateOutlet]="sheepTemplate"></ng-container>
+      <ng-container [ngTemplateOutlet]="sheepTemplate"></ng-container>
    </div>`,
   styles: [`.fence{width:200px; height: 200px; border: 1px solid red;}`],
   providers: [{ provide: FarmComponent, useExisting: FenceComponent}]
 })
-export class FenceComponent  {
+export class FenceComponent extends FarmComponent {
  
 }
 let instance = 0;
@@ -35,18 +46,4 @@ let instance = 0;
 })
 export class SheepComponent  {
  public count = ++instance;
-}
-
-
-
-
-
-
-@Directive({
-  selector: '[mySheepBlueprint]'
-})
-export class SheepBlueprintDirective  {
-  constructor(templateRef: TemplateRef<void>, farm: FenceComponent) {
-    farm.sheepTemplate = templateRef;
-  }
 }
